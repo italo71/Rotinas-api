@@ -36,6 +36,13 @@ module.exports = () => {
         res.status(400).send({ "status": "erro" })
       }
     }
+    else if (req.body.type == 'get_user') {
+      r = await tarefas.getTarefas(req.body, res);
+    }
+    else if (req.body.type == 'DELETE') {
+      r = await tarefas.deleteTarefa(req.body, res);
+    }
+
     res.status(200).send(r)
     return r
   });
