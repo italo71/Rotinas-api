@@ -1,7 +1,7 @@
 
-  const customerWalletsDB = require('../data/usuario.json');
-  const controller = {};
-  const db = require("../../config/db");
+const customerWalletsDB = require('../data/usuario.json');
+const controller = {};
+const db = require("../../config/db");
 class task {
   async selectCustomers(req, res) {
     const client = await db.connect();
@@ -15,16 +15,22 @@ class task {
     //await res.json((result.rows == null || result.rows == undefined)?{status:"erro", message:"usuario nao encontrado"}:result.rows);
   }
 
-  async selectLogin(req, res){
+  async selectLogin(req, res) {
     const client = await db.connect();
     let result;
     let vSQL = `SELECT id,nome,email,data_nasc FROM usuario WHERE LOGIN = '${req.login}' AND SENHA = '${req.senha}' limit 1`
     result = await client.query(vSQL);
-    if(result.rowCount == 0){
-    let e = {"status":"erro","message":"usuário não encontrado"}
+    if (result.rowCount == 0) {
+      vSQL = `select count(id) from usuario where login = '${req.login}'`;
+      result = await client.query(vSQL);
+      let e;
+      if (result.rowCount == 0)
+        e = { "status": "erro", "message": "usuário não encontrado" };
+      else
+        e = { "status": "erro", "message": "Senha Incorreta" };
       return e
     }
-    return {"status":"success","data":result.rows[0]};
+    return { "status": "success", "data": result.rows[0] };
   }
 
   async updateCustomer(req, res) {
@@ -38,9 +44,9 @@ class task {
     const client = await db.connect();
     const sql = 'INSERT INTO usuario(nome,login,senha,email) VALUES ($1,$2,$3,$4);';
     const values = [req.nome, req.login, req.senha, req.email];
-    
+
     let r = await client.query(sql, values);
-    let result = {"status":"success","message":"usuario salvo"}
+    let result = { "status": "success", "message": "usuario salvo" }
     await res.json(result);
   }
 }
