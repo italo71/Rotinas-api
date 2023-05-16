@@ -5,6 +5,7 @@ const user = require('../api/controllers/usuario');
 const { json } = require('body-parser');
 const { response } = require('express');
 const tarefas = require('../api/controllers/tarefas')
+const meta = require('../api/controllers/meta')
 const cors = require('cors');
 module.exports = () => {
 
@@ -20,9 +21,8 @@ module.exports = () => {
     app.use(cors());
     next();
   });
-
   var jsonParser = bodyParser.json()
-
+  app.use(express.json({ limit: '50mb' }));
   // SETANDO VARIÁVEIS DA APLICAÇÃO
   app.set('port', process.env.PORT || config.get('server.port'));
 
@@ -70,6 +70,20 @@ module.exports = () => {
       res.status(200).send(e)
     }
     return response
+  });
+
+  app.post('/meta', jsonParser, async function (req, res) {
+    let body = req.body;
+    if(body.method == 'POST'){
+      await meta.postMeta(body,res);
+    }
+    else if(body.method == 'PUT'){
+      await meta.putMeta(body,res);
+    }
+    else if(body.method == 'GET'){
+      await meta.getMeta(body, res);
+    }
+    else { res.status(200).send({"status":"erro","message":"Metodo nao suportado"});}
   });
 
   app.get('/', function (req, res) {
