@@ -2,25 +2,30 @@ const db = require("../../config/db");
 class task {
     async postMeta(req, res) {
         const client = await db.connect();
-        let sql = `insert into meta (titulo, meta, data_inicio, data_final, id_usuario) values('${req.titulo}','${req.meta}','${req.dataInicio}','${req.dataFinal}', ${req.userID})`;
+        let sql = `insert into meta (titulo, meta, data_inicio, data_final, id_usuario) values($1,$2,$3,$4,$5)`;
+        let values = [req.titulo, req.meta, req.dataInicio, req.dataFinal, req.userID];
         let r;
         try {
-            r = await client.query(sql);
+            r = await client.query(sql, values);
         }
         catch (e) {
             res.status(200).send({ "status": "erro", "message": "erro ao cadastrar meta" });
             return;
         }
-        res.status(200).send({ "status": "success", "message": "Meta cadastrada com sucesso" })
+        r = await client.query('select * from meta order by 1 desc limit 1');
+
+        res.status(200).send({ "status": "success", "message": "Meta cadastrada com sucesso", "data": r.rows });
     }
     async putMeta(req, res) {
         const client = await db.connect();
-        let sql = `update meta set titulo = '${req.titulo}', meta = '${req.meta}', data_inicio = '${req.dataInicio}', data_final = '${req.dataFinal}' where id = ${req.idMeta}`;
+        let sql = `update meta set titulo = $1, meta = $2, data_inicio = $3, data_final = $4 where id = $5`;
+        let values = [req.titulo, req.meta, req.dataInicio, req.dataFinal, req.idMeta];
         let r
         try {
-            r = await client.query(sql);
+            r = await client.query(sql, values);
         } catch (e) {
             res.status(200).send({ "status": "erro", "message": "Erro ao alterar Meta" })
+            return;
         }
         res.status(200).send({ "status": "success", "message": "Meta alterada com sucesso" })
     }
@@ -43,6 +48,18 @@ class task {
         }
         else
             res.status(404).send({ "status": "erro", "message": "Nao existem" });
+    }
+
+    async apagaMeta(req, res) {
+        if (req.metaID == null) {
+            res.status(200).send({ "status": "erro", "message": "Identificador da meta nao informado" });
+            return;
+        }
+        const client = await db.connect();
+        let sql = `delete from meta where id = ${req.metaID}`;
+        console.log(sql);
+        let r = client.query(sql);
+        console.log(r);
     }
 }
 module.exports = new task()
