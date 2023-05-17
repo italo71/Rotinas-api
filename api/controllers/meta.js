@@ -57,9 +57,13 @@ class task {
         }
         const client = await db.connect();
         let sql = `delete from meta where id = ${req.metaID}`;
-        console.log(sql);
-        let r = client.query(sql);
-        console.log(r);
+        try {
+            let r = await client.query(sql);
+        }catch(e){
+            res.status(200).send({"status":"erro","message":"Erro ao apagar Meta"});
+            return;
+        }
+        res.status(200).send({"status":"success","message":"Meta apagada com sucesso"});
     }
 }
 module.exports = new task()

@@ -74,16 +74,19 @@ module.exports = () => {
 
   app.post('/meta', jsonParser, async function (req, res) {
     let body = req.body;
-    if(body.method == 'POST'){
-      await meta.postMeta(body,res);
+    if (body.method == 'POST') {
+      await meta.postMeta(body, res);
     }
-    else if(body.method == 'PUT'){
-      await meta.putMeta(body,res);
+    else if (body.method == 'PUT') {
+      await meta.putMeta(body, res);
     }
-    else if(body.method == 'GET'){
+    else if (body.method == 'GET') {
       await meta.getMeta(body, res);
     }
-    else { res.status(200).send({"status":"erro","message":"Metodo nao suportado"});}
+    else if (body.method == 'DELETE') {
+      await meta.apagaMeta(body, res);
+    }
+    else { res.status(200).send({ "status": "erro", "message": "Metodo nao suportado" }); }
   });
 
   app.get('/', function (req, res) {
