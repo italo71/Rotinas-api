@@ -44,7 +44,6 @@ module.exports = () => {
   });
 
   app.post('/user', jsonParser, async function (req, res) {
-    console.log(req.body);
     if (req.body.type == 'dados') {
       try {
         await user.atualizacaoUsuario(req.body, res);
