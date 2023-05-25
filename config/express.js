@@ -9,8 +9,6 @@ const meta = require('../api/controllers/meta')
 const cors = require('cors');
 module.exports = () => {
 
-
-
   const app = express();
 
   app.use((req, res, next) => {
@@ -28,7 +26,6 @@ module.exports = () => {
 
   app.post('/tarefas', jsonParser, async function (req, res) {
     let r;
-    //console.log(req.body)
     if (req.body.type == null) {
       try {
         r = await tarefas.postTarefas(req.body, res)
@@ -42,9 +39,28 @@ module.exports = () => {
     else if (req.body.type == 'DELETE') {
       r = await tarefas.deleteTarefa(req.body, res);
     }
-
     res.status(200).send(r)
     return r
+  });
+
+  app.post('/user', jsonParser, async function (req, res) {
+    if (req.body.type == 'dados') {
+      try {
+        await user.atualizacaoUsuario(req.body, res);
+      }catch(e){
+        res.status(200).send({ 'status': 'erro', 'message': 'Erro inesperado' });
+        return;
+      }
+    }
+    /*  else if (req.body.type == 'senha') {
+ 
+     } */
+    else {
+      res.status(200).send({ 'status': 'erro', 'message': 'Metodo invalido' });
+      return;
+    }
+    res.status(200).send({ 'status': 'erro', 'message': 'Erro inesperado' });
+    return;
   });
 
   app.post('/user/get', jsonParser, async function (req, res) {

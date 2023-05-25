@@ -17,7 +17,6 @@ class task {
         const client = await db.connect();
         let sql = `DELETE FROM tarefas WHERE id = ${req.id_tarefa}`;
         let r = await client.query(sql);
-        console.log(r)
         if (r.rowCount > 0) {
             res.status(200).send({"status":"success","message":"Tarefa removida com sucesso!"})
             return;
@@ -26,7 +25,6 @@ class task {
             res.status(200).send({"status":"erro","message":"Erro ao excluir tarefa"})
             return;
         }
-
     }
 
     async getTarefas(req, res) {
@@ -35,13 +33,12 @@ class task {
         let r = await client.query(sql);
         if (r.rowCount <= 0) {
             res.status(200).send({ "status": "erro", "message": "Nao foram encontrados dados" });
-            return
+            return;
         }
         else {
             res.status(200).send({ 'status': 'success', 'data': r.rows });
-            return
+            return;
         }
-        return
     }
 }
 
