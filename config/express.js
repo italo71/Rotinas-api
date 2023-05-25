@@ -44,17 +44,31 @@ module.exports = () => {
   });
 
   app.post('/user', jsonParser, async function (req, res) {
+    console.log(req.body);
     if (req.body.type == 'dados') {
       try {
         await user.atualizacaoUsuario(req.body, res);
-      }catch(e){
+      } catch (e) {
         res.status(200).send({ 'status': 'erro', 'message': 'Erro inesperado' });
-        return;
       }
+      return;
     }
-    /*  else if (req.body.type == 'senha') {
- 
-     } */
+    else if (req.body.type == 'senha') {
+      try {
+        await user.confereSenha(req.body, res);
+      } catch (e) {
+        res.status(200).send({ 'status': 'erro', 'message': 'Erro inesperado' });
+      }
+      return;
+    }
+    else if (req.body.type == 'pass') {
+      try {
+        await user.atualizaSenha(req.body, res);
+      } catch (e) {
+        res.status(200).send({ 'status': 'erro', 'message': 'Erro inesperado' });
+      }
+      return;
+    }
     else {
       res.status(200).send({ 'status': 'erro', 'message': 'Metodo invalido' });
       return;
