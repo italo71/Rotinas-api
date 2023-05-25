@@ -6,6 +6,7 @@ const { json } = require('body-parser');
 const { response } = require('express');
 const tarefas = require('../api/controllers/tarefas')
 const meta = require('../api/controllers/meta')
+const agenda = require('../api/controllers/agenda')
 const cors = require('cors');
 module.exports = () => {
 
@@ -116,6 +117,24 @@ module.exports = () => {
       await meta.apagaMeta(body, res);
     }
     else { res.status(200).send({ "status": "erro", "message": "Metodo nao suportado" }); }
+  });
+
+  app.post('/agenda', jsonParser, async function (req, res) {
+    let body = req.body;
+    if (body.method == 'GET') {
+      try {
+        await agenda.getAgenda(body, res);
+      } catch (e) {
+        res.status(200).send({ "status": "erro", "message": "Erro ao obter agenda" });
+      }
+    }
+    else if (body.method == 'POST') {
+      try {
+        await agenda.postAgenda(body, res);
+      } catch (e) {
+        res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
+      }
+    }
   });
 
   app.get('/', function (req, res) {

@@ -35,7 +35,7 @@ class task {
     let vSQL = `select nome, email, data_nasc from usuario where id = ${req.userID}`;
     let r = await client.query(vSQL);
     let d = r.rows[0];
-    vSQL = 'UPDATE usuario SET nome = $1, email = $2, data_nasc = $3';
+    vSQL = `UPDATE usuario SET nome = $1, email = $2, data_nasc = $3 where id = ${req.userID}`;
     const values = [(req.nome) ? req.nome : d.nome, (req.email) ? req.email : d.email, (req.dataNasc) ? req.dataNasc : d.data_nasc];
     try {
       r = await client.query(vSQL, values);
