@@ -21,7 +21,7 @@ class task {
 
     async getAgenda(req, res) {
         const client = await db.connect();
-        let vSQL = `select titulo, descricao, data_inicio, data_final from agenda where id_usuario = ${req.userID}`;
+        let vSQL = `select id, titulo, descricao, data_inicio, data_final from agenda where id_usuario = ${req.userID}`;
         let r;
         try {
             r = await client.query(vSQL);
@@ -35,6 +35,36 @@ class task {
         } else {
             res.status(200).send({ "status": "erro", "message": "Sem dados" });
         }
+        return;
+    }
+    async deleteAgenda(req, res) {
+        const client = await db.connect();
+        let vSQL = `delete from agenda where id = ${req.idAgenda}`;
+        let r;
+        try {
+            r = await client.query(vSQL);
+        } catch (e) {
+            res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
+            return;
+        }
+        console.log(r);
+        res.status(200).send({ "status": "success", "message": "Agenda salva com sucesso" });
+        return;
+    }
+
+    async editarAgenda(req, res) {
+        const client = await db.connect();
+        let vSQL = `update agenda set titulo = $1, descricao = $2, data_inicio = $3, data_final = $4 where id = ${req.idAgenda}`;
+        let valur = [req.titulo, req.descricao, req.dataInicio, req.dataFinal];
+        let r;
+        try {
+            r = await client.query(vSQL, valur);
+        } catch (e) {
+            res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
+            return;
+        }
+        console.log(r);
+        res.status(200).send({ "status": "success", "message": "Agenda salva com sucesso" });
         return;
     }
 }
