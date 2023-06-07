@@ -5,6 +5,7 @@ class task {
         let vSQL = 'insert into agenda (id_usuario, titulo, descricao, data_inicio, data_final) values ($1,$2,$3,$4,$5)';
         let values = [req.userID, req.titulo, req.descricao, req.dataInicio, req.dataFinal];
         let r;
+        console.log('edicao-agenda');
         try {
             r = await client.query(vSQL, values);
         } catch (e) {
@@ -12,7 +13,8 @@ class task {
             return;
         }
         if (r.rowCount > 0) {
-            res.status(200).send({ "status": "Success", "message": "Agenda salva com sucesso!" });
+            r = await client.query('select id, titulo, descricao, data_inicio, data_final from agenda order by 1 desc limit 1')
+            res.status(200).send({ "status": "success", "message": "Agenda editada com sucesso!", "data":r.rows[0] });
         } else {
             res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
         }

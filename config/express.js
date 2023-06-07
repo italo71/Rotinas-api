@@ -121,6 +121,7 @@ module.exports = () => {
 
   app.post('/agenda', jsonParser, async function (req, res) {
     let body = req.body;
+    console.log(body);
     if (body.method == 'GET') {
       try {
         await agenda.getAgenda(body, res);
@@ -131,6 +132,13 @@ module.exports = () => {
     else if (body.method == 'POST') {
       try {
         await agenda.postAgenda(body, res);
+      } catch (e) {
+        res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
+      }
+    }
+    else if (body.method == 'PUT') {
+      try {
+        await agenda.editarAgenda(body, res);
       } catch (e) {
         res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
       }
