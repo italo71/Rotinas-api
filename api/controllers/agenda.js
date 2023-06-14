@@ -14,7 +14,7 @@ class task {
         }
         if (r.rowCount > 0) {
             r = await client.query('select id, titulo, descricao, data_inicio, data_final from agenda order by 1 desc limit 1')
-            res.status(200).send({ "status": "success", "message": "Agenda editada com sucesso!", "data":r.rows[0] });
+            res.status(200).send({ "status": "success", "message": "Agenda editada com sucesso!", "data": r.rows[0] });
         } else {
             res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
         }
@@ -23,7 +23,7 @@ class task {
 
     async getAgenda(req, res) {
         const client = await db.connect();
-        let vSQL = `select id, titulo, descricao, data_inicio, data_final from agenda where id_usuario = ${req.userID}`;
+        let vSQL = `select id, titulo, descricao, data_inicio, data_final from agenda where id_usuario = ${req.userID} order by data_inicio`;
         let r;
         try {
             r = await client.query(vSQL);
@@ -49,7 +49,6 @@ class task {
             res.status(200).send({ "status": "erro", "message": "Erro ao salvar agenda" });
             return;
         }
-        console.log(r);
         res.status(200).send({ "status": "success", "message": "Agenda salva com sucesso" });
         return;
     }
