@@ -31,7 +31,6 @@ class task {
             res.status(200).send({ "status": "erro", "message": "Erro ao obter agenda" });
             return;
         }
-
         if (r.rowCount > 0) {
             res.status(200).send({ "status": "success", "data": r.rows });
         } else {
