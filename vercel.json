@@ -6,11 +6,5 @@
             "use": "@vercel/node"
         }
     ],
-    "routes": [
-        {
-            "src": "(.*)",
-            "dest": "config/express.js"
-        }
-    ],
     "installCommand": "npm install"
 }
