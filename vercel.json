@@ -2,14 +2,14 @@
     "version":2,
     "builds":[
         {
-            "src":"api/config/express.js",
+            "src":"./config/express.js",
             "use":"@vercel/node"
         }
     ],
     "routes":[
         {
             "src":"(.*)",
-            "dest":"api/config/express.js"
+            "dest":"./config/express.js"
         }
     ]
 }
